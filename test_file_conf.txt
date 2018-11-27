@@ -1,0 +1,4 @@
+# Esto es un archivo de prueba de configuracion
+Esta linea la coge 
+# Esta no
+      Esta si 
