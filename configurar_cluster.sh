@@ -73,19 +73,19 @@ do
 			;;
 	esac
 
-	ssh root@$IP 'mkdir ~/ProyectoASI/' > /dev/null 2>&1 || { 
+	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'mkdir ~/ClusterManagement/' > /dev/null 2>&1 || { 
 		echo "ERROR: Creación carpeta del proyecto"
 		exit 1
 	}
 
-	scp ./Configuration/$FILE_CONF_SERV root@$IP:~/ProyectoASI/$FILE_CONF_SERV > /dev/null 2>&1
-	scp $SCRIPT root@$2:~/ProyectoASI/servicio > /dev/null 2>&1
-	scp ./Service/$SCRIPT root@$MAQUINA:~/$SCRIPT > /dev/null 2>&1
+	scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null ./Configuration/$FILE_CONF_SERV root@$IP:~/ClusterManagement/$FILE_CONF_SERV > /dev/null 2>&1
+	scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null $SCRIPT root@$IP:~/ClusterManagement/servicio > /dev/null 2>&1
+	scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null ./Service/$SCRIPT root@$IP:~/$SCRIPT > /dev/null 2>&1
 
-	ssh root@$MAQUINA "chmod +x ~/ProyectoASI/$SCRIPT" > /dev/null 2>&1
-	ssh root@$MAQUINA "~/ProyectoASI/$SCRIPT ~/ProyectoASI/$FILE_CONF_SERV" 2>&1
+	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP "chmod +x ~/ClusterManagement/$SCRIPT" > /dev/null 2>&1
+	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP "~/ClusterManagement/$SCRIPT ~/ClusterManagement/$FILE_CONF_SERV" 2>&1
 
-	ssh root@$MAQUINA 'rm -r ~/ProyectoASI/' > /dev/null 2>&1
+	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'rm -r ~/ClusterManagement/' > /dev/null 2>&1
 
 
 done
