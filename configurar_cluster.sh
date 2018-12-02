@@ -27,7 +27,6 @@ F_C_FORMAT=`grep -E -v '^(#|$)' $F_CONF`
 Num_LIN=1 
 IFS=$'\n' 
 
-
 for service in $F_C_FORMAT 
 do
 	IFS=$' '
@@ -73,20 +72,49 @@ do
 			;;
 	esac
 
-	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'mkdir ~/ClusterManagement/' > /dev/null 2>&1 || { 
+	# Create directory 
+        ssh root@$IP 'mkdir /ProyectoASI' > /dev/null 2>&1 || { 
+		echo "ERROR: Creación carpeta del proyecto"
+		exit 1
+	}
+       
+	echo "Acierto: Creación carpeta del proyecto"
+
+	# Copy directories
+	echo "Copia del directorio Configuration"
+
+	scp -r /home/practicas/ASI/ClusterManagement/Configuration root@$IP:/ProyectoASI > /dev/null 2>&1 || { 
+		echo "ERROR: Copiar directorio Configuration"
+		exit 1
+	}
+	echo "Acierto: Directorio Configuration copiado"
+
+    echo "Copia del directorio Service"
+	scp -r /home/practicas/ASI/ClusterManagement/Service root@$IP:/ProyectoASI > /dev/null 2>&1 || { 
+		echo "ERROR: Copiar directorio Service"
+		exit 1
+	}
+	echo "Acierto: Directorio Service copiado"
+	
+	# Execute mandate
+	ssh root@$IP "chmod +x /ProyectoASI/Service/$SCRIPT" > /dev/null 2>&1 { 
 		echo "ERROR: Creación carpeta del proyecto"
 		exit 1
 	}
 
-	scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null ./Configuration/$FILE_CONF_SERV root@$IP:~/ClusterManagement/$FILE_CONF_SERV > /dev/null 2>&1
-	scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null $SCRIPT root@$IP:~/ClusterManagement/servicio > /dev/null 2>&1
-	scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null ./Service/$SCRIPT root@$IP:~/$SCRIPT > /dev/null 2>&1
+    ssh root@$IP "/ProyectoASI/Service/$SCRIPT /ProyectoASI/Configuration/$FILE_CONF_SERV" > /dev/null 2>&1 { 
+		echo "ERROR: Creación carpeta del proyecto"
+		exit 1
+	}
+	
+	# Remove directory
+	ssh root@$IP 'rm -r /ProyectoASI' > /dev/null 2>&1 || { 
+		echo "ERROR: Borrar Carpeta"
+		exit 1
+	}
+	echo "Acierto: Carpeta borrada correctamente"
+	exit 0
 
-	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP "chmod +x ~/ClusterManagement/$SCRIPT" > /dev/null 2>&1
-	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP "~/ClusterManagement/$SCRIPT ~/ClusterManagement/$FILE_CONF_SERV" 2>&1
-
-	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'rm -r ~/ClusterManagement/' > /dev/null 2>&1
-
-
+  
 done
 exit 0
