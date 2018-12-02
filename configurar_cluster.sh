@@ -72,7 +72,21 @@ do
 			exit 1
 			;;
 	esac
-done
- 
 
+	ssh root@$IP 'mkdir ~/ProyectoASI/' > /dev/null 2>&1 || { 
+		echo "ERROR: Creación carpeta del proyecto"
+		exit 1
+	}
+
+	scp ./Configuration/$FILE_CONF_SERV root@$IP:~/ProyectoASI/$FILE_CONF_SERV > /dev/null 2>&1
+	scp $SCRIPT root@$2:~/ProyectoASI/servicio > /dev/null 2>&1
+	scp ./Service/$SCRIPT root@$MAQUINA:~/$SCRIPT > /dev/null 2>&1
+
+	ssh root@$MAQUINA "chmod +x ~/ProyectoASI/$SCRIPT" > /dev/null 2>&1
+	ssh root@$MAQUINA "~/ProyectoASI/$SCRIPT ~/ProyectoASI/$FILE_CONF_SERV" 2>&1
+
+	ssh root@$MAQUINA 'rm -r ~/ProyectoASI/' > /dev/null 2>&1
+
+
+done
 exit 0
