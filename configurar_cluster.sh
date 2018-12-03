@@ -35,49 +35,49 @@ do
 	FILE_CONF_SERV=`echo $service | cut -d " " -f3`
 
 	echo "Parametros de la linea: $Num_LIN $IP $SERVICE $FILE_CONF_SERV" 
-   
+
 	let Num_LIN+=1
 
 	case $SERVICE in
 		mount )
-			SCRIPT=mount.sh
-			;;
+		SCRIPT=mount.sh
+		;;
 		raid )
-			SCRIPT=raid.sh
-			;;
+		SCRIPT=raid.sh
+		;;
 		lvm )
-			SCRIPT=lvm.sh
-			;;
+		SCRIPT=lvm.sh
+		;;
 		nis_server )
-			SCRIPT=nis_server.sh
-			;;
+		SCRIPT=nis_server.sh
+		;;
 		nis_client )
-			SCRIPT=nis_client.sh
-			;;
+		SCRIPT=nis_client.sh
+		;;
 		nfs_server )
-			SCRIPT=nfs_server.sh
-			;;
+		SCRIPT=nfs_server.sh
+		;;
 		nfs_client )
-			SCRIPT=nfs_client.sh
-			;;
+		SCRIPT=nfs_client.sh
+		;;
 		backup_server )
-			SCRIPT=backup_server.sh
-			;;
+		SCRIPT=backup_server.sh
+		;;
 		backup_client )
-			SCRIPT=backup_client.sh
-			;;
+		SCRIPT=backup_client.sh
+		;;
 		*)
-			echo "ERROR: Tratamiento del servicio $SERVICE"
-			exit 1
-			;;
+		echo "ERROR: Tratamiento del servicio $SERVICE"
+		exit 1
+		;;
 	esac
 
 	# Create directory 
-        ssh root@$IP 'mkdir /ProyectoASI' > /dev/null 2>&1 || { 
+	ssh root@$IP 'mkdir /ProyectoASI' > /dev/null 2>&1 || { 
 		echo "ERROR: Creación carpeta del proyecto"
 		exit 1
 	}
-       
+
 	echo "Acierto: Creación carpeta del proyecto"
 
 	# Copy directories
@@ -89,7 +89,7 @@ do
 	}
 	echo "Acierto: Directorio Configuration copiado"
 
-    echo "Copia del directorio Service"
+	echo "Copia del directorio Service"
 	scp -r /home/practicas/ASI/ClusterManagement/Service root@$IP:/ProyectoASI > /dev/null 2>&1 || { 
 		echo "ERROR: Copiar directorio Service"
 		exit 1
@@ -102,7 +102,7 @@ do
 		exit 1
 	}
 
-    ssh root@$IP "/ProyectoASI/Service/$SCRIPT /ProyectoASI/Configuration/$FILE_CONF_SERV" > /dev/null 2>&1 { 
+	ssh root@$IP "/ProyectoASI/Service/$SCRIPT /ProyectoASI/Configuration/$FILE_CONF_SERV" > /dev/null 2>&1 { 
 		echo "ERROR: Creación carpeta del proyecto"
 		exit 1
 	}
@@ -113,8 +113,4 @@ do
 		exit 1
 	}
 	echo "Acierto: Carpeta borrada correctamente"
-	exit 0
-
-  
 done
-exit 0
