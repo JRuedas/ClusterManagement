@@ -22,7 +22,10 @@ fi
 
 FILE_CONF_CLEAN=`grep -E -v '^(#|$)' $FILE_CONF`
 
-sed '1 d' FILE_CONF_CLEAN > raid
+for line in cat $FILE_CONF_CLEAN
+do 
+	echo $line
+done
 RAID=cat raid
 #	LEVEL_RAID=
 #	DEVICES= 
