@@ -40,7 +40,8 @@ if [ $? -ne 0 ]
 then 
  	echo "$Name_Dev[\t]$Mount_Point[\t]auto[\t]auto[\t]0[\t]0" >> /etc/fstab 
  elif [ $? -ne 0 ]
- 	echo "Service_MOUNT: Error no se ha podido configurar /etc/fstab"
+ 	then
+ 		echo "Service_MOUNT: Error no se ha podido configurar /etc/fstab"
 else 
 	echo "Service_MOUNT: El dispositivo $Name_Dev ya se encuentra en /etc/fstab"
 fi
