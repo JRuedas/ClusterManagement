@@ -5,7 +5,7 @@
 
 File_Conf_Serv=$1
 Name_Dev=`head -n 1 $File_Conf_Serv`
-Mount_Point=`tail -n 2 $File_Conf_Serv`
+Mount_Point=`tail -n 1 $File_Conf_Serv`
 
 echo "Nombre del dispositivo: $Name_Dev"
 echo "Punto de montaje: $Mount_Point"
