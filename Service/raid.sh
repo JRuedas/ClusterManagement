@@ -1,9 +1,16 @@
 #!/bin/bash
 
-# Check number of arguments
-
 FILE_CONF=$*
 
+#read the file conf
+RAID=$(head -n 1 $FILE_CONF)
+LEVEL=$(sed -n 2p $FILE_CONF)
+DEVICES=$(tail -n 1 $FILE_CONF)
+echo $DEVICES | wc -w > num.txt
+NUM_DEVICES=$(cat num.txt)
+rm num.txt
+
+# Check number of arguments
 if [ $# -ne 1 ]
 then
 	echo "ERROR: El número de argumentos no es válido"
@@ -13,33 +20,21 @@ else
 	if [ -f $FILE_CONF ]
 	then 
 		echo "El contenido del fichero de configuración es: "
-		cat $FILE_CONF
+		echo Raid: $RAID
+		echo Level: $LEVEL
+		echo Devices: $NUM_DEVICES, $DEVICES
 	else
-		echo "ERROR: $FILE_CONF no existe"
+		echo "ERROR: $FILE_CONF no existe o no es un fichero"
 		exit 1
 	fi 
 fi 
 
-FILE_CONF_CLEAN=`grep -E -v '^(#|$)' $FILE_CONF`
-
-for line in cat $FILE_CONF_CLEAN
-do 
-	echo $line
-done
-RAID=cat raid
-#	LEVEL_RAID=
-#	DEVICES= 
-
-
-#install de tools
-apt-get update
-apt-get install mdadm
-echo "Heramientas para crear el RAID instaladas"
-
-
-#read the file conf
-
+#install the tools
+#apt-get update
+#apt-get install mdadm
+#echo "Heramientas para crear el RAID instaladas"
 
 
 #create the raid
 #mdadm --create --verbose /dev/md0 --level=0 --raid-devices=2  /dev/sdb1 /dev/sdc1
+mdadm --create --verbose $RAID --level=$LEVEL --raid-devices=$NUM_DEVICES  $DEVICES
