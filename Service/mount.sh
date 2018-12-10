@@ -12,14 +12,14 @@ echo "Punto de montaje: $Mount_Point"
 
 # Check if device exist
 
-isMounted=`df | grep -o "$Name_Dev"` 
-
+isMounted=`ls -l /dev/sd* | grep -o $Name_Dev` 
+echo "valor del dispositivo: $isMounted"
+ 
 if [ -z "$isMounted" ] 
 then
 	echo "Service_MOUNT: Error de montado, el dispositivo $Name_Dev no existe o no se puede montar"
 fi
 
-echo "Valor de dispositivo $isMounted"
 
 # Check mount point 
 
@@ -30,27 +30,28 @@ fi
 
 # Creat a directory with intermediate
 
-mkdir -p $Mount_Point > /dev/null
+mkdir -p ./$Mount_Point > /dev/null
 
 # Check configuration on fstab and mount
 
-grep -q "$Name_Dev" /etc/fstab 
+grep -o "$Name_Dev" /etc/fstab > /dev/null 
 
 if [ $? -ne 0 ]
 then 
- 	echo "$Name_Dev[\t]$Mount_Point[\t]auto[\t]auto[\t]0[\t]0" >> /etc/fstab 
- elif [ $? -ne 0 ]
- 	then
- 		echo "Service_MOUNT: Error no se ha podido configurar /etc/fstab"
-else 
-	echo "Service_MOUNT: El dispositivo $Name_Dev ya se encuentra en /etc/fstab"
+    echo "El dispositivo no esta en fstab" 
+    echo "$Name_Dev $Mount_Point auto auto 0 0" >> /etc/fstab 
+fi
+ 
+if [ $? -ne 0 ]
+then 
+	echo "Service_MOUNT: El dispositivo $Name_Dev copiado en /etc/fstab"
 fi
 
 # mount all file systems mentioned in fstab
 
-mount -a > /dev/null
+#mount -a > /dev/null
 
-echo "Service_MOUNT: Servicio Montaje completado correctamente"
+#echo "Service_MOUNT: Servicio Montaje completado correctamente"
 
 
 
