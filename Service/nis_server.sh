@@ -93,4 +93,8 @@ else
     echo "\nError al volcar la información al repositorio"
 fi
 
+#start service
+echo "\nArrancando servidor NIS..."
+service nis start
+
 
