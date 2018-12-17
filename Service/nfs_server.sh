@@ -15,13 +15,14 @@ else
 		cat $FILE_CONF
 
 	else
-		echo "\nERROR: $FILE_CONF no existe o no es un fichero"
+		echo "\nERROR: $FILE_CONF no es un fichero"
 		exit 1
 	fi 
 fi 
 
 
 #install the tools
+echo "\nInstalando heramientas para crear el servidor NFS..."
 #apt-get update
 #apt-get install nfs-kernel-server
 if [ $? -eq 0 ]
@@ -30,34 +31,36 @@ else
     echo "\nError al instalar NFS"
 fi
 
-#modified /etc/idmapd.conf
 
-#sed '/^# Domain = .*/ s/^# Domain = .*/# Domain = newDomain/g' /etc/idmapd.conf
-#duda si debe hacerse
+#obtain IP address and MASK of the NFS server
+IP=$(ip -o -f inet addr show | awk '/scope global/ {print $4}')
+MASK=$(/sbin/ifconfig eth0 | awk '/Mask:/{ print $4;}' | sed 's/Mask://g')
 
-#modifed /etc/exports 
 
-c=0
+#obtain the number of devices in the file
 for line in $(cat $FILE_CONF)
 do
-	eval "var$c=$line";
-	c=$((c+1));
+	echo "$line";
+	cut
+	#modifed /etc/exports 
+	echo "\nModificando fichero /etc/exports  para poner nombre de dominio NIS... " 
+	#/home 10.0.2.0/24(rw,sync,no_subtree_check)	
+	sed "s/ ./$line $MASK(rw,sync)/g" /etc/exports > test-file.txt
+	cat test-file.txt
+	exportfs
 done
+rm test-file.txt
 
-echo $var0
+#start service
+echo "\nArrancando servidor NFS..."
+#service nfs start
 
-ifconfig > file-test.txt
 
-sed --silent '/inet addr:/{p;}' file-test.txt > file-test2.txt
-IP=$(cat file-test2.txt | cut -d " " -f2)
-echo "$IP"
 
-rm file-test.txt file-test2.txt
 
-#sed "/^$/ s/^$/$var0 /g" /etc/exports 
 
-#servidor:dir_exportado punto_de_monatje nfs defaults
-#/home 10.0.2.0/24(rw,sync,no_subtree_check)
+
+
 
 
 
