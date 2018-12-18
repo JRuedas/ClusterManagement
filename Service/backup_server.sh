@@ -9,16 +9,16 @@ DIR_REMOTE=`head -n 1 $FILE_CONF`
 #check number of arguments
 if [ $# -ne 1 ]
 then
-	echo "Service_BACKUP: ERRROR El número de argumentos no es válido"
+	echo "Service_BACKUP_S: ERRROR El número de argumentos no es válido"
 	exit 1
 else
 	#check if the param is a file
 	if [ -f $FILE_CONF ]
 	then 
-		echo "Service_BACKUP: Contenido del Fichero de Configuración Perfil de servicio:"
+		echo "Service_BACKUP_S: Contenido del Fichero de Configuración Perfil de servicio:"
 		echo "$DIR_REMOTE"
 	else
-		echo "Service_BACKUP: $FILE_CONF no es un fichero"
+		echo "Service_BACKUP_S: $FILE_CONF no es un fichero"
 		exit 1
 	fi 
 fi 
@@ -30,3 +30,10 @@ mkdir -p $DIR_REMOTE
 # Creat Directory for Backup (Exe Directory)
 
 #mkdir -p ./$DIR_REMOTE
+
+if [ $? -ne 0 ]
+then 
+    echo "Service_BACKUP_S: Error al crear Directorio almacen"
+else 
+	echo "Service_BACKUP_S: Completado correctamente"
+fi
