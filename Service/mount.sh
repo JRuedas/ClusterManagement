@@ -28,7 +28,7 @@ then
 	exit 1
 fi
 
-# Creat a directory with intermediate
+# Creat a directory with intermediate (OPTIONS: -p, --parents)
 
 mkdir -p ./$Mount_Point > /dev/null
 
