@@ -34,6 +34,7 @@ mkdir -p $DIR_REMOTE
 if [ $? -ne 0 ]
 then 
     echo "Service_BACKUP_S: Error al crear Directorio almacen"
+    exit 1
 else 
 	echo "Service_BACKUP_S: Completado correctamente"
 fi
