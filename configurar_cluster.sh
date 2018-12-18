@@ -15,7 +15,7 @@ file_service="mount.sh raid.sh lvm.sh nis_server.sh nis_client.sh nfs_server.sh 
 for file in $file_service; do
 	if [ ! -f "./Service/$file" ]
 	then
-		echo "ERROR: Fichero $file no disponible."
+		echo "ERROR: $file no es un fichero."
 		exit 1
 	fi
 done
