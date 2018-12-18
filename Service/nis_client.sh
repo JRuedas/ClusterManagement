@@ -1,8 +1,8 @@
 #!bin/bash
 
 FILE_CONF=$*
-NIS_DOMAIN=$(head -n 1 $FILE_CONF)
-NIS_SERVER=$(tail -n 1 $FILE_CONF)
+NIS_DOMAIN=$(head --lines 1 $FILE_CONF)
+NIS_SERVER=$(tail --lines 1 $FILE_CONF)
 
 #check number of arguments
 if [ $# -ne 1 ]
@@ -23,10 +23,14 @@ else
 fi 
 
 
+#set the non interactive mode
+export DEBIAN_FRONTEND=noninteractive
+
+
 #install the tools
 echo "\nInstalando heramientas para crear el cliente NIS..."
 apt-get update
-apt-get -y install nis
+apt-get install nis
 if [ $? -eq 0 ]
     then echo "\nHeramientas para crear el cliente NIS instaladas"
 else
