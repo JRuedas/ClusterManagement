@@ -109,6 +109,9 @@ GROUP_SIZE="$(sed 's/^[[:space:]]*//' <<< "${array[0]}")"
 
 # Comprobacion si entra en tamaño de grupo
 
+echo "TOTAL calculado:" $TOTAL_SIZE
+echo "GROUP:" $GROUP_SIZE 
+
 if [ $TOTAL_SIZE -gt $GROUP_SIZE ]; then
 	echo "Error: El tamaño del grupo es demasiado pequeño"
 	exit 1
@@ -116,10 +119,11 @@ fi
 
 echo "Creando volumenes logicos dentro del grupo"
 
+set -x
 counter=0
 until [ $counter -ge $volcount ]; do
 	echo "vol" ${VOL_NAME[$counter]}
-	lvcreate --name ${VOL_NAME[$counter]} --size $VOL_SIZE[$counter]G $NAME > /dev/null
+	lvcreate --name ${VOL_NAME[$counter]} --size ${VOL_SIZE[$counter]} $NAME > /dev/null
 	let counter+=1
      done
      
