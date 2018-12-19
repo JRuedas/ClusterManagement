@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Export DEBIAN_FRONTEND with value noninteractive to force the install of tools
+
+export DEBIAN_FRONTEND=noninteractive
+
 #Get parameters from the service configuration file
 
 FILE_CONF=$1
@@ -48,5 +52,37 @@ ssh root@$IP 'test -d $DIR_REM' > /dev/null 2>&1 || {
 		echo "Service_BACKUP_C: ERROR, No existe el directorio de almacenamiento en el Servidor de Backup"
 		exit 1
 	}
+
+#install the tools
+# update tools 
+
+apt-get update
+
+#apt-get install rysinc 
+
+apt install rysinc > /dev/null 
+
+if [ $? -eq 0 ]
+	then 
+		echo "Service_BACKUP_C: Heramienta rysinc instalada"
+else
+    echo "Service_BACKUP_C: ERROR Heramienta rysinc no se ha podido instalar"
+	exit 1
+fi
+
+# Creat Demon 
+
+grep -o "* */$TIME * * * root rsync -avz $DIR_LOC root@$servidor:$DIR_REM"
+
+if [ $? -ne 0 ]
+	then 
+		echo "* */$TIME * * * root rsync -avz $DIR_LOC root@$servidor:$DIR_REM" >> /etc/crontab
+else
+    echo "Service_BACKUP_C: Demonio ya existe"
+	exit 1
+fi
+
+
+
 
 
