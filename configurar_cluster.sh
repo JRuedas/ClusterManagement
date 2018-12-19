@@ -73,44 +73,51 @@ do
 	esac
 
 	# Create directory 
-	ssh root@$IP 'mkdir /ProyectoASI' > /dev/null 2>&1 || { 
-		echo "ERROR: Creación carpeta del proyecto"
+	echo "Creando el directorio ProyectoASI..."
+	ssh root@$IP 'mkdir ProyectoASI' > /dev/null 2>&1 || { 
+		echo "ERROR: No se puedo crear el directorio ProyectoASI"
 		exit 1
 	}
+	echo "Se ha creado el directorio ProyectoASI"
 
-	echo "Acierto: Creación carpeta del proyecto"
 
-	# Copy directories
-	echo "Copia del directorio Configuration"
-
+	# Copy configuration directory
+	echo "Copiano directorio Configuration..."
 	scp -r /home/practicas/ASI/ClusterManagement/Configuration root@$IP:/ProyectoASI > /dev/null 2>&1 || { 
-		echo "ERROR: Copiar directorio Configuration"
+		echo "ERROR: No se puedo copiar el directorio Configuration"
 		exit 1
 	}
-	echo "Acierto: Directorio Configuration copiado"
+	echo "Directorio Configuration copiado"
 
-	echo "Copia del directorio Service"
+
+	# Copy service directory
+	echo "Copiando directorio Service..."
 	scp -r /home/practicas/ASI/ClusterManagement/Service root@$IP:/ProyectoASI > /dev/null 2>&1 || { 
-		echo "ERROR: Copiar directorio Service"
+		echo "ERROR: No se puedo copiar el directorio Service"
 		exit 1
 	}
-	echo "Acierto: Directorio Service copiado"
+	echo "Directorio Service copiado"
 	
+
 	# Execute mandate
-	ssh root@$IP "chmod +x /ProyectoASI/Service/$SCRIPT" > /dev/null 2>&1 { 
-		echo "ERROR: Creación carpeta del proyecto"
+	echo "Dando permisos de ejecución..."
+	ssh root@$IP "chmod +x /ProyectoASI/Service/$SCRIPT" > /dev/null 2>&1 || { 
+		echo "ERROR: No se pudo dar permisos de ejecución al script"
 		exit 1
 	}
 
-	ssh root@$IP "/ProyectoASI/Service/$SCRIPT /ProyectoASI/Configuration/$FILE_CONF_SERV" > /dev/null 2>&1 { 
-		echo "ERROR: Creación carpeta del proyecto"
+	# Run script
+	echo "Ejecutando script..."
+	ssh root@$IP "/ProyectoASI/Service/$SCRIPT /ProyectoASI/Configuration/$FILE_CONF_SERV" > /dev/null 2>&1 || { 
+		echo "ERROR: No se pudo ejecutar el script con su fichero de configuración"
 		exit 1
 	}
 	
 	# Remove directory
+	echo "Borrando el directorio ProyectoASI..."
 	ssh root@$IP 'rm -r /ProyectoASI' > /dev/null 2>&1 || { 
-		echo "ERROR: Borrar Carpeta"
+		echo "ERROR: No se puedo borrar el directorio ProyectoASI"
 		exit 1
 	}
-	echo "Acierto: Carpeta borrada correctamente"
+	echo "Directorio borrado correctamente"
 done
