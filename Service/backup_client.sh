@@ -39,48 +39,64 @@ then
 	exit 1
 fi
 
+
+
 # Check IP of Backup Server
 
 ping -c3 $IP > /dev/null 2>&1 || { 
 		echo "Service_BACKUP_C: ERROR, Dirección IP: $IP no encontrada"
 		exit 1
 	}
+echo "Service_BACKUP_C: Conexión correcta con el servidor de backup $IP"
 
 # Check Remote Directory
 
+echo "Service_BACKUP_C: Comprobando la existencia del directorio Remoto..."
 ssh root@$IP 'test -d $DIR_REM' > /dev/null 2>&1 || { 
-		echo "Service_BACKUP_C: ERROR, No existe el directorio de almacenamiento en el Servidor de Backup"
+		echo "Service_BACKUP_C: ERROR, No existe el directorio remoto de almacenamiento en el Servidor de Backup"
 		exit 1
 	}
 
-#install the tools
+echo "Service_BACKUP_C: Existe el Directorio Remoto de almacenamiento"
+
+
+
+# install the tools
 # update tools 
 
-apt-get update
+#apt-get update > /dev/null 2>&1 || { 
+#		echo "Service_BACKUP_C: ERROR, no se han podido actualizar los repositorios de instalación"
+#		exit 1
+#	}
 
-#apt-get install rysinc 
 
-apt install rysinc > /dev/null 
+echo "Service_BACKUP_C: Instalando herramienta de backup Rysinc..."
 
-if [ $? -eq 0 ]
-	then 
-		echo "Service_BACKUP_C: Heramienta rysinc instalada"
-else
-    echo "Service_BACKUP_C: ERROR Heramienta rysinc no se ha podido instalar"
-	exit 1
-fi
+apt-get install rsync > /dev/null 2>&1 || { 
+		echo "Service_BACKUP_C: ERROR, no se han podido instalar la herramineta rysinc"
+		exit 1
+	}
+echo "Service_BACKUP_C: Herramienta Rysinc instalada correctamente"
 
 # Creat Demon 
 
-grep -o "* */$TIME * * * root rsync -avz $DIR_LOC root@$servidor:$DIR_REM"
+isCreated=`cat /etc/crontab |  grep -o "$DIR_LOC root@$IP:$DIR_REM"`
 
-if [ $? -ne 0 ]
-	then 
-		echo "* */$TIME * * * root rsync -avz $DIR_LOC root@$servidor:$DIR_REM" >> /etc/crontab
+#echo "Valor de retorno: $?"
+
+if [ -z "$isCreated" ]
+then 
+    echo "Service_BACKUP_C: Demonio no existe"
+    # Demon rsync with OPTIONS: -a = -rlptgoD (recursive, links, permissions, times, groups, owner, diveces)  
+    #                           -z = zip
+    echo "* */$TIME * * * root rsync -az $DIR_LOC root@$IP:$DIR_REM" >> /etc/crontab
+    echo "Service_BACKUP_C: Demonio creado correctamente"
 else
     echo "Service_BACKUP_C: Demonio ya existe"
-	exit 1
 fi
+
+echo "Service_BACKUP_C: Servicio Backup cliente completado"
+
 
 
 
