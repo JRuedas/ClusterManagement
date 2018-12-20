@@ -35,6 +35,15 @@ if [ $? -ne 0 ]
 then 
     echo "Service_BACKUP_S: Error al crear Directorio almacen"
     exit 1
-else 
-	echo "Service_BACKUP_S: Completado correctamente"
 fi
+
+
+# Check if Directory is empty
+
+if [ "$(ls -A $DIR_REMOTE)" ] 
+	then 
+	 echo "Service_BACKUP_S: Error, no se puede usar $DIR_REMOTE como alamacen, no esta vacío" 
+else
+	 echo "Service_BACKUP_S: Servicio Backup Servidor completado correctamente"
+fi 
+
