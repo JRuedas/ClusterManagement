@@ -73,8 +73,8 @@ do
 	esac
 
 	# Create directory 
-	echo "Creando el directorio ProyectoASI..."
-	ssh root@$IP 'mkdir ProyectoASI' > /dev/null 2>&1 || { 
+	echo "Creando el directorio ProyectoASI en /tmp ..."
+	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'mkdir /tmp/ProyectoASI' > /dev/null 2>&1 || { 
 		echo "ERROR: No se puedo crear el directorio ProyectoASI"
 		exit 1
 	}
@@ -83,7 +83,7 @@ do
 
 	# Copy configuration directory
 	echo "Copiano directorio Configuration..."
-	scp -r /home/practicas/ASI/ClusterManagement/Configuration root@$IP:/ProyectoASI > /dev/null 2>&1 || { 
+	scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -r ./Configuration root@$IP:/tmp/ProyectoASI > /dev/null 2>&1 || { 
 		echo "ERROR: No se puedo copiar el directorio Configuration"
 		exit 1
 	}
@@ -92,7 +92,7 @@ do
 
 	# Copy service directory
 	echo "Copiando directorio Service..."
-	scp -r /home/practicas/ASI/ClusterManagement/Service root@$IP:/ProyectoASI > /dev/null 2>&1 || { 
+	scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -r ./Service root@$IP:/tmp/ProyectoASI > /dev/null 2>&1 || { 
 		echo "ERROR: No se puedo copiar el directorio Service"
 		exit 1
 	}
@@ -101,21 +101,21 @@ do
 
 	# Execute mandate
 	echo "Dando permisos de ejecución..."
-	ssh root@$IP "chmod +x /ProyectoASI/Service/$SCRIPT" > /dev/null 2>&1 || { 
+	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP "chmod +x /tmp/ProyectoASI/Service/$SCRIPT" > /dev/null 2>&1 || { 
 		echo "ERROR: No se pudo dar permisos de ejecución al script"
 		exit 1
 	}
 
 	# Run script
 	echo "Ejecutando script..."
-	ssh root@$IP "/ProyectoASI/Service/$SCRIPT /ProyectoASI/Configuration/$FILE_CONF_SERV" > /dev/null 2>&1 || { 
+	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP "/tmp/ProyectoASI/Service/$SCRIPT /tmp/ProyectoASI/Configuration/$FILE_CONF_SERV" || { 
 		echo "ERROR: No se pudo ejecutar el script con su fichero de configuración"
 		exit 1
 	}
 	
 	# Remove directory
 	echo "Borrando el directorio ProyectoASI..."
-	ssh root@$IP 'rm -r /ProyectoASI' > /dev/null 2>&1 || { 
+	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'rm -Rf /tmp/ProyectoASI' > /dev/null 2>&1 || { 
 		echo "ERROR: No se puedo borrar el directorio ProyectoASI"
 		exit 1
 	}
