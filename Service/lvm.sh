@@ -119,7 +119,6 @@ fi
 
 echo "Creando volumenes logicos dentro del grupo"
 
-set -x
 counter=0
 until [ $counter -ge $volcount ]; do
 	echo "vol" ${VOL_NAME[$counter]}
