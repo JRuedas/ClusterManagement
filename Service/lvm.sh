@@ -12,7 +12,7 @@ if [ ! -f $1 ]; then
 	exit 1
 fi
 
-prevIFS=$IF
+prevIFS=$IFS
 IFS=$'\n'
 
 echo "Leyendo fichero de configuración del servicio"
