@@ -30,7 +30,7 @@ fi
 
 # Creat a directory with intermediate (OPTIONS: -p, --parents)
 
-mkdir -p ./$Mount_Point > /dev/null
+mkdir -p $Mount_Point > /dev/null
 
 # Check configuration on fstab and mount
 
@@ -39,7 +39,7 @@ grep -o "$Name_Dev" /etc/fstab > /dev/null
 if [ $? -ne 0 ]
 then 
     echo "Service_MOUNT: El dispositivo no esta en fstab" 
-    echo "$Name_Dev .$Mount_Point auto auto 0 0" >> /etc/fstab 
+    echo "$Name_Dev $Mount_Point auto auto 0 0" >> /etc/fstab 
 else 
     echo "Service_MOUNT: El dispositivo $Name_Dev ya esta en /etc/fstab"
 fi
@@ -60,7 +60,3 @@ then
 else 
     echo "Service_MOUNT: Error al finalizar montaje"
 fi 
-
-
-
-
