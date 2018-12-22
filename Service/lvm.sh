@@ -74,8 +74,10 @@ echo "Servicio LVM version 2 instalado correctamente"
 
 # Inicializamos los volumenes fisicos forzandolos por si existiesen y de forma no interactiva
 
+
+IFS=' '
 echo "Inicializando los volumenes fisicos"
-pvcreate -y -ff $DEVICES > /dev/null
+pvcreate $DEVICES > /dev/null
 
 if [ $? -ne 0 ]; then
 	echo "Error: Fallo la inicializacion de los volumenes fisicos"
@@ -85,7 +87,7 @@ fi
 # Creamos un grupo de volumenes forzandolo por si existiesen y de forma no interactiva
 
 echo "Creando grupo de volumenes"
-vgcreate -y -f $NAME $DEVICES > /dev/null
+vgcreate $NAME $DEVICES > /dev/null
 
 if [ $? -ne 0 ]; then
 	echo "Error: Fallo la creacion del grupo de volumenes"
@@ -118,8 +120,13 @@ echo "Creando volumenes logicos dentro del grupo"
 
 counter=0
 until [ $counter -ge $volcount ]; do
-	echo "vol" ${VOL_NAME[$counter]}
 	lvcreate --name ${VOL_NAME[$counter]} --size ${VOL_SIZE[$counter]} $NAME > /dev/null
+	
+	if [ $? -ne 0 ]; then
+		echo "Error: Fallo la creacion del volumen" ${VOL_NAME[$counter]}
+		exit 1
+	fi
+
 	let counter+=1
      done
      
