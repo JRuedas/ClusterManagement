@@ -11,7 +11,8 @@ FILE_CONF=$1
 DIR_LOC=`head -n 1 $FILE_CONF`
 IP=`sed -n 2p $FILE_CONF`  
 DIR_REM=`sed -n 3p $FILE_CONF` 
-TIME=`tail -n 1 $FILE_CONF`
+TIME=`sed -n 4p $FILE_CONF`
+#TIME=`tail -n 1 $FILE_CONF`
 
 if [ $# -ne 1 ]
 then
@@ -69,13 +70,13 @@ echo "Service_BACKUP_C: Existe el Directorio Remoto de almacenamiento"
 #	}
 
 
-echo "Service_BACKUP_C: Instalando herramienta de backup Rysinc..."
+echo "Service_BACKUP_C: Instalando herramienta de backup Rsync..."
 
 apt-get install rsync > /dev/null 2>&1 || { 
 		echo "Service_BACKUP_C: ERROR, no se han podido instalar la herramineta rysinc"
 		exit 1
 	}
-echo "Service_BACKUP_C: Herramienta Rysinc instalada correctamente"
+echo "Service_BACKUP_C: Herramienta Rsync instalada correctamente"
 
 # Creat Demon 
 
