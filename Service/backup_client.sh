@@ -52,13 +52,12 @@ echo "Service_BACKUP_C: Conexión correcta con el servidor de backup $IP"
 # Check Remote Directory
 
 echo "Service_BACKUP_C: Comprobando la existencia del directorio Remoto..."
-ssh root@$IP 'test -d $DIR_REM' > /dev/null 2>&1 || { 
+ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP "test -d $DIR_REM" > /dev/null 2>&1 || { 
 		echo "Service_BACKUP_C: ERROR, No existe el directorio remoto de almacenamiento en el Servidor de Backup"
 		exit 1
 	}
 
 echo "Service_BACKUP_C: Existe el Directorio Remoto de almacenamiento"
-
 
 
 # install the tools
@@ -96,9 +95,3 @@ else
 fi
 
 echo "Service_BACKUP_C: Servicio Backup cliente completado"
-
-
-
-
-
-
