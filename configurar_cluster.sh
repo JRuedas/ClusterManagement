@@ -82,7 +82,7 @@ do
 
 
 	# Copy configuration directory
-	echo "Copiano directorio Configuration..."
+	echo "Copiando directorio Configuration..."
 	scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -r ./Configuration root@$IP:/tmp/ProyectoASI > /dev/null 2>&1 || { 
 		echo "ERROR: No se puedo copiar el directorio Configuration"
 		exit 1
