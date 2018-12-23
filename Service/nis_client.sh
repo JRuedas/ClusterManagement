@@ -56,16 +56,6 @@ else
 fi
 
 
-# Modifica /etc/hosts para establecer el dominio del servidor
-#echo "Servicio NIS servidor: Modificando fichero /etc/hosts para poner servidor NIS como host... " 
-#sed "s/^127\.0\.1\.1.*/127.0.1.1\t$NIS_DOMAIN_NAME/g" /etc/hosts > test-file.txt
-#cat test-file.txt > /etc/hosts
-#rm test-file.txt
-
-#echo "Servicio NIS servidor: El fichero /etc/hosts ha sido modificado, su contenido ahora es: " 
-#cat /etc/hosts
-
-
 # Modifica /etc/defaultdomain para establecer el dominio del servidor
 echo "Servicio NIS servidor: Modificando fichero /etc/defaultdomain para poner nombre de dominio NIS... " 
 echo $NIS_DOMAIN > /etc/defaultdomain
