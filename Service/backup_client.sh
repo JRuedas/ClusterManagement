@@ -6,7 +6,7 @@ echo "Servicio BACKUP CL: Iniciando servicio BACKUP CLIENTE"
 
 export DEBIAN_FRONTEND=noninteractive
 
-##Obtener los parametros del fichero de perfil de configuracion de servicio
+#Obtener los parametros del fichero de perfil de configuracion de servicio
 
 FILE_CONF=$1
 
@@ -15,13 +15,13 @@ IP=`sed -n 2p $FILE_CONF`
 DIR_REM=`sed -n 3p $FILE_CONF` 
 TIME=`sed -n 4p $FILE_CONF`
 
-
+#Comprobar Numero de argumentos
 if [ $# -ne 1 ]
 then
 	echo "ERROR: El número de argumentos no es válido"
 	exit 1
 else
-	#check if the param is a file
+	#Comprobar si es un fichero
 	if [ ! -f $FILE_CONF ]
 	then
 		echo "ERROR: $FILE_CONF no es un fichero"
@@ -61,7 +61,7 @@ ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP "test -d 
 echo "Servicio BACKUP CL: Existe el Directorio Remoto de almacenamiento"
 
 
-# Instalar herraminetas
+# Instalar herramientas
 
 echo "Servicio BACKUP CL: Instalando herramienta de backup Rsync..."
 
