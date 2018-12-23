@@ -59,7 +59,6 @@ cat /etc/default/nis
 # Permite acceso a todos
 echo "Servicio NIS servidor: El fichero /etc/ypserv.securenets no ha sido modificado, por defecto da acceso a todos, su contenido es: " 
 cat /etc/ypserv.securenets
-echo "\n"
 
 
 # Arranca servicio
@@ -99,12 +98,25 @@ sed --quiet '/MERGE_GROUP=/p' /var/yp/Makefile
 
 # Actualiza la base de datos de NIS 
 echo "Servicio NIS servidor: Volcando información de configuración al repositorio..."
-/usr/lib/yp/ypinit -m > /dev/null
+EOF 2> /dev/null | /usr/lib/yp/ypinit -m &> /dev/null
 if [ $? -eq 0 ]
     	then echo "Servicio NIS servidor: Información de configuración volcada a repositorio"
 else
     	echo "ERROR: No se pudo volcar la información al repositorio"
 	exit 1
 fi
+
+
+# Reinicia el servicio
+echo "Servicio NIS servidor: Reiniciando el servicio NIS..."
+/etc/init.d/nis restart &> /dev/null
+if [ $? -eq 0 ]
+    	then echo "Servicio NIS servidor: Servicio reiniciado"
+else
+    	echo "ERROR: No se pudo reiniciar el servicio"
+	exit 1
+fi
+
+
 
 
