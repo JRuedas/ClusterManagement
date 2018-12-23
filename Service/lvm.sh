@@ -40,7 +40,7 @@ for line in $(cat $1); do
 
 	       	read -r -a array <<< "$line"
 		VOL_NAME[$volcount]=${array[0]}
-		VOL_SIZE[$volcount]=${array[1]::-1}
+		VOL_SIZE[$volcount]=${array[1]}
 
 		IFS=$'\n'
 		let volcount+=1
