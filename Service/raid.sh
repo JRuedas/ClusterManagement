@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Export DEBIAN_FRONTEND with value noninteractive to force the install of tools
+
+export DEBIAN_FRONTEND=noninteractive
+
 FILE_CONF=$*
 
 #read the file conf
