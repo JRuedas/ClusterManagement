@@ -8,7 +8,7 @@ FILE_CONF=$1
 
 if [ $# -ne 1 ]
 then
-	echo "ERROR: ERRROR El número de argumentos no es válido"
+	echo "ERROR: El número de argumentos no es válido"
 	exit 1
 else
 	#check if the param is a file

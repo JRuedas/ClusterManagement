@@ -3,19 +3,19 @@
 # Comprobamos si el numero de parametros es correcto y el fichero de configuracion existe
 
 if [ $# -ne 1 ]; then
-	echo "Error: Numero de parametros incorrecto"
+	echo "ERROR: Numero de parametros incorrecto"
 	exit 1
 fi
 
 if [ ! -f $1 ]; then
-	echo "Error: El fichero especificado no existe"
+	echo "ERROR: El fichero especificado no existe"
 	exit 1
 fi
 
 prevIFS=$IFS
 IFS=$'\n'
 
-echo "Leyendo fichero de configuración del servicio"
+echo "Servicio LVM: Leyendo fichero de configuración del servicio"
 
 #Contador de lineas y contador de volumenes
 
@@ -51,7 +51,7 @@ done
 # Comprobacion numero de lineas de fichero incorrecto
 
 if [ $volcount -eq 0 ]; then
-	echo "Error: Numero de lineas de fichero incorrectas"
+	echo "ERROR: Numero de lineas de fichero incorrectas"
 	exit 1
 fi
 
@@ -59,38 +59,37 @@ fi
 
 export DEBIAN_FRONTEND=noninteractive
 
-echo "Actualizando paquetes e instalando servicio LVM version 2"
+echo "Servicio LVM: Actualizando paquetes e instalando servicio LVM version 2"
 apt-get -y update > /dev/null 2&>1
 apt-get -y install lvm2 --no-install-recommends > /dev/null
 
 # Comprobacion si la instalacion se hizo correctamente 
 
 if [ $? -ne 0 ]; then
-	echo "Error: El paquete no se pudo instalar"
+	echo "ERROR: El paquete no se pudo instalar"
 	exit 1
 fi
 
-echo "Servicio LVM version 2 instalado correctamente"
+echo "Servicio LVM: Servicio LVM version 2 instalado correctamente"
 
 # Inicializamos los volumenes fisicos forzandolos por si existiesen y de forma no interactiva
 
-
 IFS=' '
-echo "Inicializando los volumenes fisicos"
+echo "Servicio LVM: Inicializando los volumenes fisicos"
 pvcreate $DEVICES > /dev/null
 
 if [ $? -ne 0 ]; then
-	echo "Error: Fallo la inicializacion de los volumenes fisicos"
+	echo "ERROR: Fallo la inicializacion de los volumenes fisicos"
 	exit 1
 fi
 
 # Creamos un grupo de volumenes forzandolo por si existiesen y de forma no interactiva
 
-echo "Creando grupo de volumenes"
+echo "Servicio LVM: Creando grupo de volumenes"
 vgcreate $NAME $DEVICES > /dev/null
 
 if [ $? -ne 0 ]; then
-	echo "Error: Fallo la creacion del grupo de volumenes"
+	echo "ERROR: Fallo la creacion del grupo de volumenes"
 	exit 1
 fi
 
@@ -112,18 +111,18 @@ GROUP_SIZE="$(sed 's/^[[:space:]]*//' <<< "${array[0]}")"
 # Comprobacion si entra en tamaño de grupo
 
 if [ $TOTAL_SIZE -gt $GROUP_SIZE ]; then
-	echo "Error: El tamaño del grupo es demasiado pequeño"
+	echo "ERROR: El tamaño del grupo es demasiado pequeño"
 	exit 1
 fi
 
-echo "Creando volumenes logicos dentro del grupo"
+echo "Servicio LVM: Creando volumenes logicos dentro del grupo"
 
 counter=0
 until [ $counter -ge $volcount ]; do
 	lvcreate --name ${VOL_NAME[$counter]} --size ${VOL_SIZE[$counter]} $NAME > /dev/null
 	
 	if [ $? -ne 0 ]; then
-		echo "Error: Fallo la creacion del volumen" ${VOL_NAME[$counter]}
+		echo "ERROR: Fallo la creacion del volumen" ${VOL_NAME[$counter]}
 		exit 1
 	fi
 
@@ -132,4 +131,4 @@ until [ $counter -ge $volcount ]; do
      
 IFS=$prevIFS
 
-echo "Servicio configurado"
+echo "Servicio LVM: Servicio LVM completado"
