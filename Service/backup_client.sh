@@ -2,11 +2,11 @@
 
 echo "Servicio BACKUP CL: Iniciando servicio BACKUP CLIENTE"
 
-#Exportar DEBIAN_FRONTEND con el valor noninteractive para forzar la instalación de herramientas
+#Exportar DEBIAN_FRONTEND con el valor noninteractive para forzar la instalacion de herramientas
 
 export DEBIAN_FRONTEND=noninteractive
 
-##Obtener los parámetros del fichero de perfil de configuración de servicio
+##Obtener los parametros del fichero de perfil de configuracion de servicio
 
 FILE_CONF=$1
 
@@ -42,7 +42,7 @@ then
 	exit 1
 fi
 
-# Comprobar conexión con la máquina Servidor 
+# Comprobar conexion con la maquina Servidor 
 
 ping -c3 $IP > /dev/null 2>&1 || { 
 		echo "ERROR: Dirección IP: $IP no encontrada"

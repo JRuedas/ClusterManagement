@@ -2,7 +2,7 @@
  
 echo "Servicio MOUNT: Iniciando servicio MOUNT"
 
-# Comprobamos si el número de parámetros es correcto y el fichero de configuración existe
+# Comprobamos si el numero de parámetros es correcto y el fichero de configuracion existe
 
 if [ $# -ne 1 ]; then
 	echo "ERROR: Numero de parametros incorrecto"
@@ -14,7 +14,7 @@ if [ ! -f $1 ]; then
 	exit 1
 fi
 
-#Obtener los parámetros del fichero de perfil de configuración de servicio
+#Obtener los parametros del fichero de perfil de configuracion de servicio
 
 File_Conf_Serv=$1
 Name_Dev=`head -n 1 $File_Conf_Serv`

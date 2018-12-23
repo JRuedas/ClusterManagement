@@ -22,7 +22,7 @@ else
 	fi 
 fi 
 
-#Obtener los parámetros del fichero de perfil de configuración de servicio
+#Obtener los parametros del fichero de perfil de configuracion de servicio
 
 DIR_REMOTE=`head -n 1 $FILE_CONF`
 
@@ -36,7 +36,7 @@ then
     exit 1
 fi
 
-# Comprobar si el Directorio esta vacío
+# Comprobar si el Directorio esta vacio
 
 if [ "$(ls -A $DIR_REMOTE)" ] 
 	then 
