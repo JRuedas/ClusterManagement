@@ -5,17 +5,17 @@ FILE_CONF=$*
 #check number of arguments
 if [ $# -ne 1 ]
 then
-	echo "\nERROR: El número de argumentos no es válido"
+	echo "ERROR: El número de argumentos no es válido"
 	exit 1
 else
 	#check if the param is a file
 	if [ -f $FILE_CONF ]
 	then 
-		echo "\nEl contenido del fichero de configuración es: "
+		echo "El contenido del fichero de configuración es: "
 		cat $FILE_CONF
 
 	else
-		echo "\nERROR: $FILE_CONF no es un fichero"
+		echo "ERROR: $FILE_CONF no es un fichero"
 		exit 1
 	fi 
 fi 
@@ -25,19 +25,19 @@ export DEBIAN_FRONTEND=noninteractive
 
 
 #install the tools
-echo "\nInstalando heramientas para crear el servidor NFS..."
-apt-get update
-apt-get install nfs-kernel-server
+echo "Instalando heramientas para crear el servidor NFS..."
+apt-get -y update > /dev/null 2&>1
+apt-get -y install nfs-common > /dev/null
 if [ $? -eq 0 ]
-    	then echo "\nHeramientas para crear el servidor NFS instaladas"
+    	then echo "Heramientas para crear el servidor NFS instaladas"
 else
-    	echo "\nError al instalar NFS"
+    	echo "Error al instalar NFS"
 	exit 1
 fi
 
 
 #obtain the number of devices in the file
-echo "\nModificando fichero /etc/exports para poner nombre de dominio NIS... "
+echo "Modificando fichero /etc/exports para poner nombre de dominio NIS... "
 for line in $(cat $FILE_CONF)
 do
 	#modifed /etc/exports  
@@ -49,28 +49,28 @@ do
 	fi
 done
 
-echo "\nEl fichero /etc/exports ha sido modificado, su contenido ahora es:"
+echo "El fichero /etc/exports ha sido modificado, su contenido ahora es:"
 cat /etc/exports
 
 
 #export files
-echo "\nExportando directorios... "
+echo "Exportando directorios... "
 exportfs
 if [ $? -eq 0 ]
-    	then echo "\nDirectorios exportados"
+    	then echo "Directorios exportados"
 else
-    	echo "\nError al exportar los directorios"
+    	echo "Error al exportar los directorios"
 	exit 1
 fi
 
 
 #start service
-echo "\nArrancando servidor NFS..."
+echo "Arrancando servidor NFS..."
 service nfs start
 if [ $? -eq 0 ]
-    	then echo "\nServidor NFS arrancado"
+    	then echo "Servidor NFS arrancado"
 else
-    	echo "\nError al arrancar el servidor"
+    	echo "Error al arrancar el servidor"
 	exit 1
 fi
 

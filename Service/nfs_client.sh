@@ -5,17 +5,17 @@ FILE_CONF=$*
 #check number of arguments
 if [ $# -ne 1 ]
 then
-	echo "\nERROR: El número de argumentos no es válido"
+	echo "ERROR: El número de argumentos no es válido"
 	exit 1
 else
 	#check if the param is a file
 	if [ -f $FILE_CONF ]
 	then 
-		echo "\nEl contenido del fichero de configuración es: "
+		echo "El contenido del fichero de configuración es: "
 		cat $FILE_CONF
 
 	else
-		echo "\nERROR: $FILE_CONF no es un fichero"
+		echo "ERROR: $FILE_CONF no es un fichero"
 		exit 1
 	fi 
 fi 
@@ -26,13 +26,13 @@ export DEBIAN_FRONTEND=noninteractive
 
 
 #install the tools
-echo "\nInstalando heramientas para crear el servidor NFS..."
-#apt-get update
-#apt-get install nfs-kernel-server
+echo "Instalando heramientas para crear el servidor NFS..."
+apt-get -y update > /dev/null 2&>1
+apt-get -y install nfs-kernel-server > /dev/null
 if [ $? -eq 0 ]
-    	then echo "\nHeramientas para crear el servidor NFS instaladas"
+    	then echo "Heramientas para crear el servidor NFS instaladas"
 else
-    	echo "\nError al instalar NFS"
+    	echo "Error al instalar NFS"
 	exit 1
 fi
 
@@ -43,19 +43,19 @@ while IFS=' ' read -r IP REMOTE_DIR MOUNT; do
 
 	#modifed /etc/fstab
 	#10.0.2.15:/home /home nfs defaults
-	echo "\nModificando fichero /etc/fstab... "
+	echo "Modificando fichero /etc/fstab... "
 	grep --quiet "$IP:$REMOTE_DIR $MOUNT nfs defaults$" /etc/fstab
 	if [ $? -eq 1 ] ; then
 		echo "$IP:$REMOTE_DIR $MOUNT nfs defaults" >> /etc/fstab	
 	fi
 
 	#mount -t nfs servidor:dir_exportado punto_de_montaje
-	echo -e "\nCreando punto de montaje remoto... " 
+	echo -e "Creando punto de montaje remoto... " 
 	#mount --types nfs $IP:$REMOTE_DIR $MOUNT
 	if [ $? -eq 0 ]
-    		then echo -e "\nPunto de montaje $IP:$REMOTE_DIR $MOUNT creado" 
+    		then echo -e "Punto de montaje $IP:$REMOTE_DIR $MOUNT creado" 
 	else
-    		echo "\nError al crear el punto de montaje: $IP:$REMOTE_DIR $MOUNT "
+    		echo "Error al crear el punto de montaje: $IP:$REMOTE_DIR $MOUNT "
 	fi
 
 done < $FILE_CONF
