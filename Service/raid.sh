@@ -49,7 +49,7 @@ fi
 #create the raid
 echo "Creando el RAID..."
 #mdadm --create --verbose /dev/md0 --level=0 --raid-devices=2  /dev/sdb1 /dev/sdc1
-mdadm --create --verbose $RAID --level=$LEVEL --raid-devices=$NUM_DEVICES  $DEVICES
+mdadm --create -R --verbose $RAID --level=$LEVEL --raid-devices=$NUM_DEVICES  $DEVICES
 if [ $? -eq 0 ]
     	then echo "El raid $RAID ha sido creado en los dispositivos $DEVICES"
 else
