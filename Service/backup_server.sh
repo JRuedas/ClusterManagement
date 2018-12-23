@@ -1,49 +1,48 @@
 #!/bin/bash
 
+echo "Servicio BACKUP SV: Iniciando servicio BACKUP SERVIDOR"
+
 FILE_CONF=$1
 
-#Get parameters from the service configuration file
+#Comprobar argumentos
 
-DIR_REMOTE=`head -n 1 $FILE_CONF`
-
-#check number of arguments
 if [ $# -ne 1 ]
 then
-	echo "Service_BACKUP_S: ERRROR El número de argumentos no es válido"
+	echo "ERROR: ERRROR El número de argumentos no es válido"
 	exit 1
 else
 	#check if the param is a file
 	if [ -f $FILE_CONF ]
 	then 
-		echo "Service_BACKUP_S: Contenido del Fichero de Configuración Perfil de servicio:"
+		echo "Servicio BACKUP SV: Contenido del Fichero de Configuración Perfil de servicio:"
 		echo "$DIR_REMOTE"
 	else
-		echo "Service_BACKUP_S: $FILE_CONF no es un fichero"
+		echo "ERROR: $FILE_CONF no es un fichero"
 		exit 1
 	fi 
 fi 
 
-# Creat Directory for Backup (Root Directory)
+#Obtener los parámetros del fichero de perfil de configuración de servicio
+
+DIR_REMOTE=`head -n 1 $FILE_CONF`
+
+#Crear Directorio de Backup
 
 mkdir -p $DIR_REMOTE
 
-# Creat Directory for Backup (Exe Directory)
-
-#mkdir -p ./$DIR_REMOTE
-
 if [ $? -ne 0 ]
 then 
-    echo "Service_BACKUP_S: Error al crear Directorio almacen"
+    echo "ERROR: Al crear Directorio almacén"
     exit 1
 fi
 
-
-# Check if Directory is empty
+# Comprobar si el Directorio esta vacío
 
 if [ "$(ls -A $DIR_REMOTE)" ] 
 	then 
-	 echo "Service_BACKUP_S: Error, no se puede usar $DIR_REMOTE como alamacen, no esta vacío" 
+	 echo "ERROR: no se puede usar $DIR_REMOTE como alamacén, no está vacío" 
+	 exit 1
 else
-	 echo "Service_BACKUP_S: Servicio Backup Servidor completado correctamente"
+	 echo "Servicio BACKUP SV: Servicio Backup Servidor completado"
 fi 
 
