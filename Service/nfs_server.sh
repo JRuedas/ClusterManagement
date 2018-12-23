@@ -11,9 +11,7 @@ then
 else
 	# Comprobar que el argumento sea un fichero
 	if [ -f $FILE_CONF ]
-	then 
-		echo "Servicio NFS servidor: El contenido del fichero de configuración es: "
-		cat $FILE_CONF
+	then echo "Servicio NFS servidor: $FILE_CONF es un fichero"
 
 	else
 		echo "ERROR: $FILE_CONF no es un fichero"
@@ -30,6 +28,7 @@ export DEBIAN_FRONTEND=noninteractive
 echo "Servicio NFS servidor: Instalando heramientas para crear el servidor NFS..."
 apt-get -y update > /dev/null 2&>1
 apt-get -y install nfs-common > /dev/null
+apt-get -y install nfs-kernel-server > /dev/null
 if [ $? -eq 0 ]
     	then echo "Servicio NFS servidor: Heramientas para crear el servidor NFS instaladas"
 else
@@ -42,12 +41,24 @@ fi
 echo "Servicio NFS servidor: Modificando fichero /etc/exports para insertar los directorios a exportar... "
 for line in $(cat $FILE_CONF)
 do
-	#modifed /etc/exports  
+	# Comprueba que el directorio exista
+	if [ ! -d $line ]
+	then
+		echo "ERROR: El directorio $line no existe"
+		exit 1
+	fi
+	# Comprueba que el fichero de configuración no tenga líneas en blanco
+	if [ $line -lt 1 ]
+	then 
+		echo "ERROR: El fichero de configuración esta vacio"
+		exit 1
+	fi
+	# Modifica /etc/exports para que el cambio sea persistente
 	#/home 10.0.2.0/24(rw,sync,no_subtree_check)
-	if cat /etc/exports | grep --quiet "^$line 0.0.0.0/0(rw,sync)"; then
+	if cat /etc/exports | grep --quiet "^$line *(rw,sync)"; then
 		continue
 	else
-		echo "$line 0.0.0.0/0(rw,sync)" >> /etc/exports	
+		echo "$line *(rw,sync)" >> /etc/exports	
 	fi
 done
 
@@ -55,24 +66,13 @@ echo "Servicio NFS servidor: El fichero /etc/exports ha sido modificado, su cont
 cat /etc/exports
 
 
-# Exportar directorios
-echo "Servicio NFS servidor: Exportando directorios... "
-exportfs
+# Reiniciar servicio
+echo "Servicio NFS servidor: Reiniciando servidor NFS..."
+/etc/init.d/nfs-kernel-server restart
 if [ $? -eq 0 ]
-    	then echo "Servicio NFS servidor: Directorios exportados"
+    	then echo "Servicio NFS servidor: Servidor NFS reiniciado"
 else
-    	echo "ERROR: No se pudo exportar los directorios"
-	exit 1
-fi
-
-
-# Arrancar servicio
-echo "Servicio NFS servidor: Arrancando servidor NFS..."
-service nfs start
-if [ $? -eq 0 ]
-    	then echo "Servicio NFS servidor: Servidor NFS arrancado"
-else
-    	echo "ERROR: No se pudo arrancar el servidor"
+    	echo "ERROR: No se pudo reiniciar el servidor"
 	exit 1
 fi
 
