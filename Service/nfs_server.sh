@@ -1,17 +1,18 @@
-#!bin/bash
+#!/bin/bash
 
 FILE_CONF=$*
 
-#check number of arguments
+
+# Comprobar el número de argumentos
 if [ $# -ne 1 ]
 then
 	echo "ERROR: El número de argumentos no es válido"
 	exit 1
 else
-	#check if the param is a file
+	# Comprobar que el argumento sea un fichero
 	if [ -f $FILE_CONF ]
 	then 
-		echo "El contenido del fichero de configuración es: "
+		echo "Servicio NFS servidor: El contenido del fichero de configuración es: "
 		cat $FILE_CONF
 
 	else
@@ -20,24 +21,25 @@ else
 	fi 
 fi 
 
-#set the non interactive mode
+
+# Establecer el modo no interactivo
 export DEBIAN_FRONTEND=noninteractive
 
 
-#install the tools
-echo "Instalando heramientas para crear el servidor NFS..."
+# Instalar las herramientas
+echo "Servicio NFS servidor: Instalando heramientas para crear el servidor NFS..."
 apt-get -y update > /dev/null 2&>1
 apt-get -y install nfs-common > /dev/null
 if [ $? -eq 0 ]
-    	then echo "Heramientas para crear el servidor NFS instaladas"
+    	then echo "Servicio NFS servidor: Heramientas para crear el servidor NFS instaladas"
 else
-    	echo "Error al instalar NFS"
+    	echo "ERROR: no se pudo instalar NFS"
 	exit 1
 fi
 
 
-#obtain the number of devices in the file
-echo "Modificando fichero /etc/exports para poner nombre de dominio NIS... "
+# Obtener el número de direcorios en el fichero
+echo "Servicio NFS servidor: Modificando fichero /etc/exports para insertar los directorios a exportar... "
 for line in $(cat $FILE_CONF)
 do
 	#modifed /etc/exports  
@@ -49,28 +51,28 @@ do
 	fi
 done
 
-echo "El fichero /etc/exports ha sido modificado, su contenido ahora es:"
+echo "Servicio NFS servidor: El fichero /etc/exports ha sido modificado, su contenido ahora es:"
 cat /etc/exports
 
 
-#export files
-echo "Exportando directorios... "
+# Exportar directorios
+echo "Servicio NFS servidor: Exportando directorios... "
 exportfs
 if [ $? -eq 0 ]
-    	then echo "Directorios exportados"
+    	then echo "Servicio NFS servidor: Directorios exportados"
 else
-    	echo "Error al exportar los directorios"
+    	echo "ERROR: No se pudo exportar los directorios"
 	exit 1
 fi
 
 
-#start service
-echo "Arrancando servidor NFS..."
+# Arrancar servicio
+echo "Servicio NFS servidor: Arrancando servidor NFS..."
 service nfs start
 if [ $? -eq 0 ]
-    	then echo "Servidor NFS arrancado"
+    	then echo "Servicio NFS servidor: Servidor NFS arrancado"
 else
-    	echo "Error al arrancar el servidor"
+    	echo "ERROR: No se pudo arrancar el servidor"
 	exit 1
 fi
 
