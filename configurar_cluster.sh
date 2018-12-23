@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Script Principal: Iniciando administrador de servicios" 
+
 # Check number of arguments
 
 if [ $# -ne 1 ]
@@ -34,7 +36,7 @@ do
 	SERVICE=`echo $service | cut -d " " -f2` 
 	FILE_CONF_SERV=`echo $service | cut -d " " -f3`
 
-	echo "Parametros de la linea: $Num_LIN $IP $SERVICE $FILE_CONF_SERV" 
+	echo "Script Principal: Parametros de la linea $Num_LIN $IP $SERVICE $FILE_CONF_SERV" 
 
 	let Num_LIN+=1
 
@@ -73,25 +75,25 @@ do
 	esac
 
 	# Create directory 
-	echo "Creando el directorio ProyectoASI en /tmp ..."
+	echo "Script Principal: Creando el directorio ProyectoASI en /tmp ..."
 	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'mkdir /tmp/ProyectoASI' > /dev/null 2>&1 || { 
 		echo "ERROR: No se puedo crear el directorio ProyectoASI"
 		exit 1
 	}
-	echo "Se ha creado el directorio ProyectoASI"
+	echo "Script Principal: Se ha creado el directorio ProyectoASI"
 
 
 	# Copy configuration directory
-	echo "Copiando directorio Configuration..."
+	echo "Script Principal: Copiando directorio Configuration..."
 	scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -r ./Configuration root@$IP:/tmp/ProyectoASI > /dev/null 2>&1 || { 
 		echo "ERROR: No se puedo copiar el directorio Configuration"
 		exit 1
 	}
-	echo "Directorio Configuration copiado"
+	echo "Script Principal: Directorio Configuration copiado"
 
 
 	# Copy service directory
-	echo "Copiando directorio Service..."
+	echo "Script Principal: Copiando directorio Service..."
 	scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -r ./Service root@$IP:/tmp/ProyectoASI > /dev/null 2>&1 || { 
 		echo "ERROR: No se puedo copiar el directorio Service"
 		exit 1
@@ -100,24 +102,26 @@ do
 	
 
 	# Execute mandate
-	echo "Dando permisos de ejecución..."
+	echo "Script Principal: Dando permisos de ejecución..."
 	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP "chmod +x /tmp/ProyectoASI/Service/$SCRIPT" > /dev/null 2>&1 || { 
 		echo "ERROR: No se pudo dar permisos de ejecución al script"
 		exit 1
 	}
 
 	# Run script
-	echo "Ejecutando script..."
+	echo "Script Principal: Ejecutando script..."
 	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP "/tmp/ProyectoASI/Service/$SCRIPT /tmp/ProyectoASI/Configuration/$FILE_CONF_SERV" || { 
 		echo "ERROR: No se pudo ejecutar el script con su fichero de configuración"
 		exit 1
 	}
 	
 	# Remove directory
-	echo "Borrando el directorio ProyectoASI..."
+	echo "Script Principal: Borrando el directorio ProyectoASI..."
 	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'rm -Rf /tmp/ProyectoASI' > /dev/null 2>&1 || { 
 		echo "ERROR: No se puedo borrar el directorio ProyectoASI"
 		exit 1
 	}
-	echo "Directorio borrado correctamente"
+	echo "Script Principal: Directorio borrado correctamente"
 done
+
+echo "Script Principal: Administrador de servicios finalizado"
