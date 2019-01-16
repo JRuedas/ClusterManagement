@@ -22,7 +22,6 @@ for file in $file_service; do
 	fi
 done
 
-
 F_CONF=$1
 F_C_FORMAT=`grep -E -v '^(#|$)' $F_CONF`
 
@@ -75,13 +74,14 @@ do
 	esac
 
 	# Remove directory
-	echo "Script Principal: Borrando el directorio ProyectoASI..."
+	echo "Script Principal: Borrando directorio ProyectoASI de anteriores ejecuciones..."
 	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'rm -Rf /tmp/ProyectoASI' > /dev/null 2>&1 || { 
 		echo "ERROR: No se puedo borrar el directorio ProyectoASI"
 		exit 1
 	}
 	echo "Script Principal: Directorio borrado correctamente"
-
+	
+	mv $FILE_CONF_SERV ./Configuration
 
 	# Create directory 
 	echo "Script Principal: Creando el directorio ProyectoASI en /tmp ..."
