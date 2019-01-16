@@ -74,6 +74,15 @@ do
 		;;
 	esac
 
+	# Remove directory
+	echo "Script Principal: Borrando el directorio ProyectoASI..."
+	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'rm -Rf /tmp/ProyectoASI' > /dev/null 2>&1 || { 
+		echo "ERROR: No se puedo borrar el directorio ProyectoASI"
+		exit 1
+	}
+	echo "Script Principal: Directorio borrado correctamente"
+
+
 	# Create directory 
 	echo "Script Principal: Creando el directorio ProyectoASI en /tmp ..."
 	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'mkdir /tmp/ProyectoASI' > /dev/null 2>&1 || { 
@@ -115,13 +124,6 @@ do
 		exit 1
 	}
 	
-	# Remove directory
-	echo "Script Principal: Borrando el directorio ProyectoASI..."
-	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'rm -Rf /tmp/ProyectoASI' > /dev/null 2>&1 || { 
-		echo "ERROR: No se puedo borrar el directorio ProyectoASI"
-		exit 1
-	}
-	echo "Script Principal: Directorio borrado correctamente"
 done
 
 echo "Script Principal: Administrador de servicios finalizado"
