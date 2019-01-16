@@ -72,17 +72,25 @@ do
 		exit 1
 		;;
 	esac
+	
+	# Copy configuration file to Configuration folder
+	if [ ! -f $FILE_CONF_SERV ]
+	then
+		echo "ERROR: El fichero: $FILE_CONF_SERV no existe."
+		exit 1
+	fi
+
+	cp $FILE_CONF_SERV ./Configuration
+	FILE_CONF_SERV=$(basename $FILE_CONF_SERV)
 
 	# Remove directory
-	echo "Script Principal: Borrando directorio ProyectoASI de anteriores ejecuciones..."
+	echo "Script Principal: Limpiando estado de anteriores ejecuciones. Borrando directorio ProyectoASI ..."
 	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'rm -Rf /tmp/ProyectoASI' > /dev/null 2>&1 || { 
 		echo "ERROR: No se puedo borrar el directorio ProyectoASI"
 		exit 1
 	}
 	echo "Script Principal: Directorio borrado correctamente"
 	
-	mv $FILE_CONF_SERV ./Configuration
-
 	# Create directory 
 	echo "Script Principal: Creando el directorio ProyectoASI en /tmp ..."
 	ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null root@$IP 'mkdir /tmp/ProyectoASI' > /dev/null 2>&1 || { 
